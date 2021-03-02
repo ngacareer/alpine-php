@@ -13,8 +13,8 @@ LABEL maintainer="triuhv <ms@ngacareer.com>" \
     alpine-version="3.12" \
     build="02-Mar-2021"
 
-ARG ALPINE_VERSION 3.12
-ARG PHP_VERSION 8.0
+ENV ALPINE_VERSION 3.12
+ENV PHP_VERSION 8.0
 
 RUN apk upgrade --no-cache --update && \
     apk add --no-cache --update dumb-init bash ca-certificates
@@ -29,6 +29,7 @@ RUN echo "http://dl-cdn.alpinelinux.org/alpine/v${ALPINE_VERSION}/main" > /etc/a
     echo "http://dl-cdn.alpinelinux.org/alpine/v${ALPINE_VERSION}/community" >> /etc/apk/repositories && \
     echo "https://dl.bintray.com/php-alpine/v${ALPINE_VERSION}/php-${PHP_VERSION}" >> /etc/apk/repositories
 
-RUN apk add --no-cache --update php php-mbstring
+RUN apk add --no-cache --update php php-fpm php-mysqli php-mysqlnd && \
+    rm -rf /var/cache/apk/*
 
 ENTRYPOINT ["/usr/bin/dumb-init", "entrypoint.sh"]
